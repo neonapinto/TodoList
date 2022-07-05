@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+<style>
+    .item-div{
+        margin: 1rem 0 ;
+    }
+    .item-div button{
+        margin: 0 1rem;
+    }
+</style>
+<body>
+    <input id="user-input" type="text" placeholder="what do you want to do today?" />
+    <button type="button" onclick="addItem()">Add</button>
+    <button type="button" onclick="refreshItem()">Refresh</button>
+    <button type="button" onclick="deleteAllItem()">Delete All</button>
+    <button type="button" onclick="deleteSelected()">Delete selected</button>
+    <div id="list-box"></div>
+</body>
+<script>
+
+    //keep the order in which added.
+    // update and delete each 
+    // anonymous function
+    // multiple delete and update
+    // solid principles
+    //add item
+    //iife - self anonymous function - add onclick in js for the btn
+    //innerhtml innertext
+
+
+    // ui / logic / db
+    // indexed db 
+    // module import/class
+    // promises
+
+    // async GetItem
+    // async RemoveItem
+    // async GetAllItems
+    // async SetItem
+
+    (function(){
+
+    let arr_list = [];
+
+
+    function addItem(){
+        let user_input = document.getElementById('user-input').value;
+        if(user_input !== ''){
+            createElement(user_input, arr_list.length++);
+            localStorage.setItem('item-' + arr_list.length , user_input);
+        }
+        else{
+            console.log("enter something ...")
+        }
+    }
+
+    //create dom item
+    function createElement(text, id){
+        arr_list.push(text);
+        let block = document.createElement('div');
+        block.className = "item-div";
+        block.id = 'block-' + id;
+        let list = document.createElement('input');
+        list.id = 'input-' + id;
+        list.setAttribute('value', text)
+        let updatebtn = document.createElement('button');
+        let deletebtn = document.createElement('button');
+        let checkbox = document.createElement('input');
+        checkbox.type = 'checkbox'
+        checkbox.id = 'check-' + id;
+        updatebtn.innerHTML = "Update";
+        deletebtn.innerHTML = "Delete"
+        updatebtn.id = "update-" + id;
+        deletebtn.id = "delete-" + id;
+        updatebtn.onclick = function(){updateItem(this)}
+        deletebtn.onclick = function(){deleteItem(this)}
+        list.value = text;
+        block.append(list);
+        block.append(updatebtn);
+        block.append(deletebtn);
+        block.append(checkbox);
+        document.getElementById('list-box').append(block);  
+    }
+
+    //refresh
+    function refreshItem(){
+        deleteAllElement();
+        let sorted_list = sortItems(getStorageItems())
+        for (let index = 0; index < sorted_list.length; index++) {
+            createElement(localStorage.getItem('item-'+sorted_list[index]), sorted_list[index])
+        }  
+
+    }
+
+    //return local storage values
+    function getStorageItems(){
+        var values = [], keys = Object.keys(localStorage), i = keys.length;
+        while ( i-- ) {
+            values.push(keys[i]);
+        }
+        return values;
+    }
+
+    //keep the order - recheck
+    function sortItems(items){
+        let items_no = [];
+        for(let index = 0; index < items.length; index++){
+            items_no.push(items[index].split('-')[1]);
+        }
+        return items_no.sort();
+    }
+
+    //update item
+    function updateItem(event){
+        let id = event.id.split('-')[1];
+        let value = document.getElementById('input-' + id).value ;
+        if(value !== ''){
+            localStorage.setItem('item-' + id, value);
+            // arr_list[id] = value
+        }
+        else{
+            console.log("enter something..")
+        }
+    }
+
+        //delete item
+    function deleteAllItem(){
+        localStorage.clear();
+        deleteAllElement();
+    }
+
+    //delete item from dom
+    function deleteAllElement(){
+        let list_box = document.getElementById('list-box');
+        while(list_box.firstChild){
+            list_box.removeChild(list_box.firstChild);
+        }
+        arr_list.length = 0;
+    }
+
+
+    //delete single item 
+    function deleteItem(event){
+        deleteItemUtil(event.id.split('-')[1])
+    }
+
+    //delete selected item
+    function deleteSelected(){
+        let items = getStorageItems();
+        let check_id = [];
+        for(let index = 0; index < arr_list.length; index++){
+            if(document.getElementById('check-' + items[index].split('-')[1]).checked == true){
+                check_id.push(items[index].split('-')[1]);
+            }
+        }
+        check_id.forEach(element => {
+            deleteItemUtil(element);
+        });
+    }
+
+    //util for deleting single item
+    function deleteItemUtil(id){
+        localStorage.removeItem('item-' + id)
+        arr_list.pop(id)
+        let list_box = document.getElementById('list-box');
+        list_box.removeChild(document.getElementById('block-'+id))
+    }
+
+    refreshItem();
+
+    })();
+
+
+</script>
+
+</html>

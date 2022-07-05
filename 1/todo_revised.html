@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <button id="add-btn">Add</button>
+        <button id="deleteall-btn">Delete All</button>
+        <button id="refresh-btn">Refresh</button>
+    </div>
+    <div id="todo-list"></div>
+</body>
+    <script>
+            //reset todolistid in deleteall
+            //is there an advantage for passing single  id and value in update? why not pass full data?
+
+        (() =>{
+            const todoContainer = document.getElementById('todo-list');
+
+            refresh(); //refresh on page load
+
+            //load from local storage
+            function loadData(){
+                return {
+                    todoListID : JSON.parse(window.localStorage.getItem("todoListID")) ?? 1,
+                    todoList : JSON.parse(window.localStorage.getItem("todoList")) ?? []
+                }
+            }
+
+            //refresh the dom with the latest value
+            function loadUI(todoList){
+                //clear elements from dom
+                todoContainer.replaceChildren();
+                //add items to dom
+                todoList.forEach(AddItemToDOM);
+            }
+
+            //add elements to dom on add item
+            function AddItemToDOM(todoListObj){
+
+                const todoItem = document.createElement('span');
+                todoItem.innerText = todoListObj.value;
+
+                //create update btn in dom
+                const updatebtn = document.createElement('button');
+                updatebtn.innerText = "Update"
+                updatebtn.addEventListener("click", () =>{
+                    updateItem(todoListObj);
+                });
+
+                //create delete btn in dom
+                const deletebtn = document.createElement('button');
+                deletebtn.innerText = "Delete"
+                deletebtn.addEventListener("click", ()=>{
+                    deleteItem(todoListObj);
+                })
+
+                //encase in a div
+                const container = document.createElement('div');
+                container.style.margin = "1rem"
+                container.append(todoItem, updatebtn, deletebtn);
+
+                todoContainer.append(container)
+            }
+
+            //update the localstorage and in data memory
+            function updateItem(todoObj){
+                //take user input
+                //validate input
+                //update localstorage
+                //update in store data
+                let input = prompt("Enter the updated value");
+                if(input && input.trim()){ //validate data
+                    input = input.trim(); //trim for white space
+                    let {todoListID, todoList} = loadData(); 
+                    todoList.forEach( obj =>{ //match to update
+                        if(obj.id === todoObj.id){
+                            obj.value = input
+                        }
+                    });
+                    window.localStorage.setItem("todoList", JSON.stringify(todoList)); //update local storage
+                    loadUI(todoList); //update dom
+                }
+            }
+
+            function deleteItem(todoObj){
+                //delete in memory
+                //delete in localstorage
+                //refresh ui
+                let {todoListID, todoList} = loadData();
+                todoList = todoList.filter(obj => obj.id !== todoObj.id); //delete the item based on id
+                window.localStorage.setItem("todoList", JSON.stringify(todoList)); //update local storage
+                loadUI(todoList); //update dom
+            }
+
+            function refresh(){
+                //remove previous children
+                //load local storage
+                //add items to dom
+                //update in store memory
+                todoContainer.replaceChildren();
+                let {todoListID, todoList} = loadData();
+                loadUI(todoList);
+            }
+
+
+            document.getElementById('add-btn').addEventListener("click", () => {
+                //take the user input
+                //validate the input
+                //load exsiting data from local storage
+                //add it to data in memory
+                //add it to local storage
+                //create dom elements
+                let user_input = prompt("Enter the new task");
+                if(user_input && user_input.trim()){
+                    user_input = user_input.trim();
+                    let {todoListID, todoList} = loadData();
+                    todoList.push({id: todoListID++, value: user_input});
+                    window.localStorage.setItem("todoList" , JSON.stringify(todoList));
+                    window.localStorage.setItem("todoListID" , JSON.stringify(todoListID));
+                    loadUI(todoList);
+                }
+              
+            });
+
+
+            document.getElementById('deleteall-btn').addEventListener("click",  () => {
+                //delete all items in array
+                //delete local storage
+                //clear dom
+                if(confirm("Are you sure you want to delete all items?")){
+                    let {todoListID, todoList} = loadData();
+                    window.localStorage.removeItem("todoList");
+                    loadUI([]);
+                }
+            });
+
+
+            document.getElementById('refresh-btn').addEventListener("click" , () =>{
+                refresh();
+            });
+
+
+
+
+
+        })();
+    </script>
+</html>
