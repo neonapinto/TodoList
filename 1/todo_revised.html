@@ -17,7 +17,7 @@
     <script>
             //reset todolistid in deleteall
             //is there an advantage for passing single  id and value in update? why not pass full data?
-
+            //why use innertext
         (() =>{
             const todoContainer = document.getElementById('todo-list');
 
@@ -129,13 +129,9 @@
 
 
             document.getElementById('deleteall-btn').addEventListener("click",  () => {
-                //delete all items in array
-                //delete local storage
-                //clear dom
                 if(confirm("Are you sure you want to delete all items?")){
-                    let {todoListID, todoList} = loadData();
-                    window.localStorage.removeItem("todoList");
-                    loadUI([]);
+                    window.localStorage.removeItem("todoList"); //delete from local storage
+                    loadUI([]); //load with empty
                 }
             });
 
