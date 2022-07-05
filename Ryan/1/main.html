@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+</head>
+
+<body>
+    <button id="add-button">Add</button>
+    <button id="refresh-button">Refresh</button>
+    <button id="delete-all-button">Delete All</button>
+    <div id="todo-list"></div>
+
+    <script>
+        (() => {
+            // declare variables for todo item id, todo list, and main list DOM element 
+            var todoContainer = document.getElementById("todo-list");
+
+            // refresh the DOM from the data in-memory
+            Refresh();
+
+            document.getElementById("add-button").addEventListener("click", (e) => {
+                var input = prompt('Enter a todo task:');
+                if (input && input.trim()) { // if its a valid value
+                    input = input.trim(); // trim value 
+                    let {todoListID, todoList} = LoadData(); // get data from storage (assume it could have been modified from other sources)
+                    todoList.push({id:todoListID++, value:input}); // create object reference to hold id and value, then increment id, then add to in-memory
+                    window.localStorage.setItem("todoListID", JSON.stringify(todoListID)); // save id to local storage
+                    window.localStorage.setItem("todoList", JSON.stringify(todoList)); // save todo list to local storage
+                    LoadUI(todoList); // refresh DOM
+                }
+            });
+
+            document.getElementById("refresh-button").addEventListener("click", (e) => {
+                Refresh();
+            });
+
+            document.getElementById("delete-all-button").addEventListener("click", (e) => {
+                if (confirm("Are you sure you want to remove all items?")) { // check with user
+                    window.localStorage.removeItem("todoList"); // clear list from local storage
+                    LoadUI([]);
+                }
+            });
+
+            function LoadData() {
+                // load data from storage into in-memory 
+                return {
+                    todoListID : JSON.parse(window.localStorage.getItem("todoListID")) ?? 1,
+                    todoList : JSON.parse(window.localStorage.getItem("todoList")) ?? []
+                };
+            }
+
+            function LoadUI(todoList) {
+                // clear contents from the main list DOM element
+                todoContainer.replaceChildren();
+                // add items to main list DOM element
+                todoList.forEach(AddItemToPage);
+            }
+
+            function Refresh() {
+                let {todoListID, todoList} = LoadData(); // get data from storage (assume it could have been modified from other sources)
+                LoadUI(todoList);
+            }
+
+            function AddItemToPage(obj) {
+                // create div for the todo text
+                const todo = document.createElement("div");
+                todo.innerText = obj.value;
+                todo.style.display="inline";
+                todo.style.padding="5px";
+
+                // create update button for todo item
+                const updateButton = document.createElement("button");
+                updateButton.innerText = "Update";
+                updateButton.addEventListener("click", (e) => {
+                    UpdateItem(obj.id, obj.value);
+                });
+
+                // create delete button for todo item
+                const deleteButton = document.createElement("button");
+                deleteButton.innerText = "Delete";
+                deleteButton.addEventListener("click", (e) => {
+                    RemoveItem(obj.id);
+                });
+
+                // create container div for text and 2 buttons
+                const container = document.createElement("div");
+                container.append(todo, updateButton, deleteButton);
+
+                // add container div to main list DOM element
+                todoContainer.append(container);
+            }
+
+            function UpdateItem(id, value) {
+                var input = prompt('Enter a todo task:', value); // show original value in prompt
+                if (input && input.trim()) { // if its a valid value
+                    input = input.trim(); // trim value
+                    let {todoListID, todoList} = LoadData(); // get data from storage (assume it could have been modified from other sources)
+                    todoList.forEach(o => {
+                        if (o.id === id) {
+                            o.value = input; // update in-memory list
+                        }
+                    });
+                    window.localStorage.setItem("todoList", JSON.stringify(todoList)); // update local storage
+                    LoadUI(todoList); // refresh DOM
+                }
+            }
+
+            function RemoveItem(id) {
+                if (confirm("Are you sure you want to remove this?")) { // check with user
+                    let {todoListID, todoList} = LoadData();
+                    todoList = todoList.filter(x => x.id !== id); // remove from the in-memory list
+                    window.localStorage.setItem("todoList", JSON.stringify(todoList)); // update local storage
+                    LoadUI(todoList); // refresh DOM
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>
