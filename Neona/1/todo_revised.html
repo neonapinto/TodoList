@@ -15,9 +15,6 @@
     <div id="todo-list"></div>
 </body>
     <script>
-            //reset todolistid in deleteall
-            //is there an advantage for passing single  id and value in update? why not pass full data?
-            //why use innertext
         (() =>{
             const todoContainer = document.getElementById('todo-list');
 
@@ -41,7 +38,7 @@
 
             //add elements to dom on add item
             function AddItemToDOM(todoListObj){
-
+                //create text element for item
                 const todoItem = document.createElement('span');
                 todoItem.innerText = todoListObj.value;
 
@@ -59,7 +56,7 @@
                     deleteItem(todoListObj);
                 })
 
-                //encase in a div
+                //encase in a div all the children
                 const container = document.createElement('div');
                 container.style.margin = "1rem"
                 container.append(todoItem, updatebtn, deletebtn);
@@ -67,17 +64,13 @@
                 todoContainer.append(container)
             }
 
-            //update the localstorage and in data memory
+            //update the localstorage and in data memory of the item updated
             function updateItem(todoObj){
-                //take user input
-                //validate input
-                //update localstorage
-                //update in store data
-                let input = prompt("Enter the updated value");
+                let input = prompt("Enter the updated value");//take user input
                 if(input && input.trim()){ //validate data
                     input = input.trim(); //trim for white space
-                    let {todoListID, todoList} = loadData(); 
-                    todoList.forEach( obj =>{ //match to update
+                    let {todoListID, todoList} = loadData(); //load data from local storage
+                    todoList.forEach( obj =>{ //match id to update
                         if(obj.id === todoObj.id){
                             obj.value = input
                         }
@@ -87,47 +80,36 @@
                 }
             }
 
+            //utility function to delete an item in the list
             function deleteItem(todoObj){
-                //delete in memory
-                //delete in localstorage
-                //refresh ui
-                let {todoListID, todoList} = loadData();
+                let {todoListID, todoList} = loadData(); //load data from local storage
                 todoList = todoList.filter(obj => obj.id !== todoObj.id); //delete the item based on id
                 window.localStorage.setItem("todoList", JSON.stringify(todoList)); //update local storage
                 loadUI(todoList); //update dom
             }
 
+            //utility function to refresh the list
             function refresh(){
-                //remove previous children
-                //load local storage
-                //add items to dom
-                //update in store memory
-                todoContainer.replaceChildren();
-                let {todoListID, todoList} = loadData();
-                loadUI(todoList);
+                todoContainer.replaceChildren(); //clear dom elements
+                let {todoListID, todoList} = loadData(); // load data from localstorage
+                loadUI(todoList); //load dom elements
             }
 
-
+            //add items to the list
             document.getElementById('add-btn').addEventListener("click", () => {
-                //take the user input
-                //validate the input
-                //load exsiting data from local storage
-                //add it to data in memory
-                //add it to local storage
-                //create dom elements
-                let user_input = prompt("Enter the new task");
-                if(user_input && user_input.trim()){
-                    user_input = user_input.trim();
-                    let {todoListID, todoList} = loadData();
-                    todoList.push({id: todoListID++, value: user_input});
-                    window.localStorage.setItem("todoList" , JSON.stringify(todoList));
-                    window.localStorage.setItem("todoListID" , JSON.stringify(todoListID));
-                    loadUI(todoList);
+                let user_input = prompt("Enter the new task"); //take user input
+                if(user_input && user_input.trim()){ // validate input
+                    user_input = user_input.trim(); //trim if any white space
+                    let {todoListID, todoList} = loadData(); //load data from localstorage
+                    todoList.push({id: todoListID++, value: user_input}); //update in memeory data
+                    window.localStorage.setItem("todoList" , JSON.stringify(todoList)); //update local storage
+                    window.localStorage.setItem("todoListID" , JSON.stringify(todoListID)); //update local storage
+                    loadUI(todoList);  //load dom elements
                 }
               
             });
 
-
+            //delete all items in the list
             document.getElementById('deleteall-btn').addEventListener("click",  () => {
                 if(confirm("Are you sure you want to delete all items?")){
                     window.localStorage.removeItem("todoList"); //delete from local storage
@@ -135,9 +117,9 @@
                 }
             });
 
-
+            //refresh the list
             document.getElementById('refresh-btn').addEventListener("click" , () =>{
-                refresh();
+                refresh(); //refresh the data and dom
             });
 
 
