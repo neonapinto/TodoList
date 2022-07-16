@@ -44,7 +44,7 @@ import Storage from "./localstorage.js"; // local storage API strategy implement
         // clear contents from the main list DOM element
         todoContainer.replaceChildren();
         // add items to main list DOM element
-        todoList.forEach(AddItemToPage)
+        todoList.forEach(AddItemToPage);
     }
 
     function AddItemToPage(obj) {
