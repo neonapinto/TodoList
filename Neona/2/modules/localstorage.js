@@ -10,7 +10,11 @@ export default class LocalStorage{
        
     }
 
-    //add item to local storage
+    /**
+     * Add an item to the localstorage
+     * @param {input from user to be added into db} input 
+     * @returns a promise on resolving
+     */
     addItem(input){
         return new Promise((resolve, reject) =>{
             this.#todoList.push({id: this.#todoListID++, value: input}); //update in data memory
@@ -20,7 +24,10 @@ export default class LocalStorage{
         })
     }
 
-    //delete item in local storage
+    /**
+     * delete item in local storage
+     * @returns a promise on resolving
+     */
     deleteItem(id){
         return new Promise((resolve, reject) =>{
             this.#todoList = this.#todoList.filter( element => {return element.id !== id}); //update in data memory
@@ -29,7 +36,11 @@ export default class LocalStorage{
         })
     }
 
-    //delete all items from local storage
+    /**
+     * delete all items from local storage
+     * @param {the index to delete the item} id 
+     * @returns a promise on resolving
+     */
     deleteItems(){
         return new Promise((resolve, reject) =>{
             window.localStorage.removeItem('todoList'); //remove from local storage
@@ -37,7 +48,13 @@ export default class LocalStorage{
         })
     }
 
-    //update item in local Storage
+      
+    /**
+     * update item in local Storage
+     * @param {index to update the item} index 
+     * @param {the value from user to update} input
+     * @returns promise on resolve
+     */
     updateItem(id, input){
         return new Promise((resolve, reject) =>{
             this.#todoList.forEach(element => { //update in data memory
@@ -50,7 +67,10 @@ export default class LocalStorage{
         })
     }
 
-    //load data from local storage
+    /**
+     * load data from local storage
+     * @returns a promise with the entire todolist on resolving
+     */
     loadData(){
         return new Promise((resolve, reject) =>{
             //update in data memory
@@ -60,7 +80,10 @@ export default class LocalStorage{
         });
     }
 
-    //initialization load
+    /**
+     * init function to load the local storage
+     * @returns empty promise resolve
+     */
     initialization() {
         return new Promise((resolve, reject) => {
             resolve();

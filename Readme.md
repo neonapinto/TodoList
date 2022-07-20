@@ -9,8 +9,8 @@ make use of static module loading to load 2 different data storage strategy modu
 design pattern and classes. The data storage modules should be accessed in an asynchronous style with promises. Rename main.html to index.html.
 
 ###### HW3
-- Create a node.js backend with an API layer for server side storage.
-- Create a client side storage module to interact with server API (3rd one on client side).
-- Create a server side storage implementation as a flat file database using strategy design pattern and classes (1st on server side).
+- Create a node.js backend with an API layer for server side storage. - server.js
+- Create a client side storage module to interact with server API (3rd one on client side). - server.js
+- Create a server side storage implementation as a flat file database using strategy design pattern and classes (1st on server side). -  flatfile.js -> flatfile.JSON
 - Modify index.html to have a picker control to switch storage implementation between local storage, indexed db and server side.
 - Create a package.json file with all the common attributes. Scripts should include "start" and "debug" (using --inspect).
