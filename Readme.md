@@ -14,6 +14,7 @@ design pattern and classes. The data storage modules should be accessed in an as
 - Create a server side storage implementation as a flat file database using strategy design pattern and classes (1st on server side). -  flatfile.js -> flatfile.JSON
 - Modify index.html to have a picker control to switch storage implementation between local storage, indexed db and server side.
 - Create a package.json file with all the common attributes. Scripts should include "start" and "debug" (using --inspect).
+- Set singleton pattern for loading storages.
 
 ###### HW4
 - Use cookies to persist storage engine setting
