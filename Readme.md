@@ -14,3 +14,9 @@ design pattern and classes. The data storage modules should be accessed in an as
 - Create a server side storage implementation as a flat file database using strategy design pattern and classes (1st on server side).
 - Modify index.html to have a picker control to switch storage implementation between local storage, indexed db and server side.
 - Create a package.json file with all the common attributes. Scripts should include "start" and "debug" (using --inspect).
+
+###### HW4
+- Use cookies to persist storage engine setting
+- Implement framework as either [Vue + Vuetify + TypeScript + Webpack] or [React + MUI + TypeScript + Webpack]
+- Add ES Lint for style checking
+- Implement hot reloading
