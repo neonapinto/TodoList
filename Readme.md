@@ -21,3 +21,4 @@ design pattern and classes. The data storage modules should be accessed in an as
 - Implement framework as either [Vue + Vuetify + TypeScript + Webpack] or [React + MUI + TypeScript + Webpack]
 - Add ES Lint for style checking
 - Implement hot reloading
+- Add ability to switch databases using a name text field
