@@ -1,0 +1,61 @@
+{
+  "name": "to-do",
+  "version": "1.0.0",
+  "description": "An application for to do list",
+  "main": "dist/server/server.mjs",
+  "type": "module",
+  "scripts": {
+    "check": "npx eslint --ext .mts,.ts --fix .",
+    "clean":"npm run clean-client && npm run clean-server",
+    "clean-client": "IF EXIST \"dist/public\" rmdir \"dist/public\" /s /q",
+    "clean-server": "IF EXIST \"dist/server\" rmdir \"dist/server\" /s /q",
+    "build-client": "npm run clean-client && webpack --mode production",
+    "build-client-dev": "webpack --mode development -d inline-source-map",
+    "build-server": "npm run clean-server && tsc --project tsconfig.server.json",
+    "build-server-dev": "tsc --project tsconfig.server.json",
+    "launch-server": "npm run build-server && node dist/server/server.mjs",
+    "launch-server-dev": "npm run build-server-dev && node dist/server/server.mjs -k development",
+    "start": "npm run build-client && npm run launch-server",
+    "watch": "concurrently \"npm:watch-*\"",
+    "watch-client": "nodemon --exec \"npm run build-client-dev && curl http://localhost:3002/reload\" --config nodemon.client.json",
+    "watch-server": "nodemon --exec \"npm run launch-server-dev\" --config nodemon.server.json"
+  },
+  "author": "Ryan D",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheInvoker/MyAssignments.git"
+  },
+  "dependencies": {
+    "css-loader": "^6.7.1",
+    "express": "^4.18.1",
+    "filenamify": "^5.1.1",
+    "html-webpack-plugin": "^5.5.0",
+    "http": "^0.0.1-security",
+    "js-cookie": "^3.0.1",
+    "minimist": "^1.2.6",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "vue": "^2.7.8",
+    "vuetify": "^2.6.7",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/js-cookie": "^3.0.2",
+    "@types/minimist": "^1.2.2",
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-vue": "^9.2.0"
+  },
+  "keywords": [
+    "todo"
+  ]
+}

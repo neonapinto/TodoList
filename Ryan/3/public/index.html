@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+<script src="main.js" defer type="module"></script>
+</head>
+<body>
+    <input type="radio" id="localstorage" value="localstorage" name="storage" checked>
+    <label for="localstorage">Local Storage</label><br>
+    <input type="radio" id="indexeddb" value="indexeddb" name="storage">
+    <label for="indexeddb">Indexed DB</label><br>
+    <input type="radio" id="server" value="server" name="storage">
+    <label for="server">Server Side</label><br>
+
+    <button id="add-button">Add</button>
+    <button id="refresh-button">Refresh</button>
+    <button id="delete-all-button">Delete All</button>
+    <div id="todo-list"></div>
+</body>
+</html>
