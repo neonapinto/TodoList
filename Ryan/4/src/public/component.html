@@ -1,0 +1,62 @@
+<div>
+    <v-app>
+        <v-app-bar dense app elevation="2">
+            <v-app-bar-nav-icon></v-app-bar-nav-icon>
+            <v-toolbar-title>To Do List</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="AddItem">
+                <v-icon>add</v-icon>
+            </v-btn>
+            <v-btn icon @click="Refresh">
+                <v-icon>refresh</v-icon>
+            </v-btn>
+            <v-btn icon @click="DeleteItems">
+                <v-icon>playlist_remove</v-icon>
+            </v-btn>
+        </v-app-bar>
+        <v-main>
+            <v-container fluid>
+                <v-row>
+                    <v-col cols="12" xs="12" sm="12" md="12" lg="12" xl="12">
+                        <div class="text-subtitle-1">What database name do you want to connect to?</div>
+                        <v-text-field label="Name" clearable hide-details v-model="name"></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" xs="12" sm="12" md="12" lg="12" xl="12">
+                        <div class="text-subtitle-1">What storage engine do you want to use?</div>
+                        <v-radio-group dense hide-details v-model="selectedStorage">
+                            <v-radio label="Local Storage" value="localstorage"></v-radio>
+                            <v-radio label="Indexed DB" value="indexeddb"></v-radio>
+                            <v-radio label="Server Side" value="server"></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" xs="12" sm="12" md="12" lg="12" xl="12">
+                        <v-data-table :headers="headers" :items="items">
+                            <template v-slot:item.update="{ item  }">
+                                <v-btn icon @click="UpdateItem(item)">
+                                    <v-icon>edit</v-icon>
+                                </v-btn>
+                            </template>
+                            <template v-slot:item.delete="{ item  }">
+                                <v-btn icon @click="DeleteItem(item)">
+                                    <v-icon>delete</v-icon>
+                                </v-btn>
+                            </template>
+                        </v-data-table>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-snackbar v-model="snackbar.open" :timeout="snackbar.timeout">
+                {{ snackbar.text }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn color="blue" text v-bind="attrs" @click="snackbar.open = false">
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
+        </v-main>
+    </v-app>
+</div>

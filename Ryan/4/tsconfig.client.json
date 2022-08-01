@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "outDir": "dist/public",
+        "rootDir": "./src/public",
+        "sourceMap": false,
+        "noImplicitAny": true,
+        "noImplicitThis":true,
+        "noImplicitReturns": true,
+        "moduleResolution": "Node",
+        "esModuleInterop":true,
+        "resolveJsonModule": true,
+        "module": "ESNext",
+        "target": "ESNext",
+        "lib": [
+            "ESNext", "DOM", "dom.iterable"
+        ],
+        "allowJs": false,
+        "alwaysStrict": true,
+        "strict": true,
+        "typeRoots": [
+            "node_modules/@types",
+            "src/types"
+        ]
+    },
+    "include": [
+        "src/public/**/*.ts",
+        "src/server/types/**/*.d.ts"
+    ],
+    "exclude": [
+        
+    ]
+}
