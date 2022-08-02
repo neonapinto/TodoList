@@ -1,5 +1,9 @@
 import {Row, Storage} from "./utils.js";
 
+interface params {
+    [key:string]:string
+}
+
 export default class ServerStorage implements Storage {
 
     #name:string;
@@ -8,16 +12,24 @@ export default class ServerStorage implements Storage {
         this.#name = name;
     }
 
+    #GetURL(endpoints:string[], params:params) {
+        const url = new URL([window.location.origin, ...endpoints].join("/"));
+        for (const k in params) { 
+            url.searchParams.append(k, params[k]); 
+        }
+        return url;
+    }
+
     async Init() {
         await fetch("/init?name=" + encodeURIComponent(this.#name));
     }
 
     async GetAllItems():Promise<Array<Row>> {
-        return await (await fetch("/item?name=" + encodeURIComponent(this.#name))).json();
+        return await (await fetch(this.#GetURL(["item"], {name:this.#name}))).json();
     }
 
     async AddItem(value:string) {
-        await fetch("/item?name=" + encodeURIComponent(this.#name), {
+        await fetch(this.#GetURL(["item"], {name:this.#name}), {
             method:"POST",
             body:JSON.stringify({value}),
             headers:{
@@ -27,7 +39,7 @@ export default class ServerStorage implements Storage {
     }
 
     async UpdateItem(id:number, value:string) {
-        await fetch("/item?id=" + id + "&name=" + encodeURIComponent(this.#name), {
+        await fetch(this.#GetURL(["item"], {id:id.toString(), name:this.#name}), {
             method:"PUT",
             body:JSON.stringify({value}),
             headers:{
@@ -37,13 +49,13 @@ export default class ServerStorage implements Storage {
     }
 
     async RemoveItem(id:number) {
-        await fetch("/item?id=" + id + "&name=" + encodeURIComponent(this.#name), {
+        await fetch(this.#GetURL(["item"], {id:id.toString(), name:this.#name}), {
             method:"DELETE"
         });
     }
 
     async RemoveAllItems() {
-        await fetch("/item?name=" + encodeURIComponent(this.#name), {
+        await fetch(this.#GetURL(["item"], {name:this.#name}), {
             method:"DELETE"
         });
     }
