@@ -1,62 +1,96 @@
-const express = require('express'); //loading express package
-const flatfile = require('./flatfile.js'); //importing flatfile class
-let obj = new flatfile.FlatFile(); //instantiating object
-var app = express(); //instantiating express
+const express = require('express');
+const http = require("http");
+const path = require("path");
+const FlatFileDB = require("./flatfile.js");
 
-app.use(express.static('public')); //creating public route
+var storages = {};
+
+var app = express();
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 
-/**
- * This responds a get request for the homepage
+var httpServer = http.createServer(app);
+
+httpServer.listen(process.env.PORT || 3002, function () {
+    var host = httpServer.address().address;
+    var port = httpServer.address().port;
+    console.log('Todo list app started at https://%s:%s', host, port);
+});
+
+/**init function
  */
-app.get('/get_list', async(req, res) => {
-      let list = await obj.getAll();
-      res.send(list);
+app.get("/init", async (req, res, next) => {
+    try {
+        let storage = new FlatFileDB(req.query.name);
+        storages[req.query.name] = storage;
+        await storage.Init();
+        res.end();
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
- * This responds a POST request for the homepage
+ * get all items
  */
-app.post('/add_item', async(req, res) =>{
-  let item = req.body;
-  await obj.addItem(item.id, item.value);
-  res.send(item); //res.json - > sending in form json not a text
-});
-
-
-/**
- * This responds a update request for the homepage
- */
-app.patch('/update_item', async (req, res) => {
-  let item = req.body;
-  await obj.updateItem(item.id, item.value);
-  res.send(item);
+app.get("/item", async (req, res, next) => {
+    try {
+        let storage = storages[req.query.name];
+        res.json(await storage.GetAllItems());
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
- * This responds a DELETE a user request for the /del_user page.
+ * add item to the list
  */
-app.delete('/delete_item/', async(req, res) =>{
-  let id = req.body;
-  await obj.deleteItem(id);
-  res.send(id);
+app.post("/item", async (req, res, next) => {
+    try {
+        let storage = storages[req.query.name];
+        await storage.AddItem(req.body.value);
+        res.end();
+    } catch (err) {
+        next(err);
+    }
 });
 
 /**
- *  This responds a DELETE all user request for the /del_user page.
+ * update value in the list
  */
-app.patch('/delete_all_items',  async (req, res) =>{
-  await obj.deleteAll();
-  res.send();
+app.put("/item", async (req, res, next) => {
+    try {
+        let storage = storages[req.query.name];
+        await storage.UpdateItem(JSON.parse(req.query.id), req.body.value);
+        res.end();
+    } catch (err) {
+        next(err);
+    }
 });
 
+/**
+ * delete an item
+ */
+app.delete("/item", async (req, res, next) => {
+    try {
+        let storage = storages[req.query.name];
+        if (req.query.id) {
+            await storage.RemoveItem(JSON.parse(req.query.id));
+        } else {
+            await storage.RemoveAllItems();
+        }
+        res.end();
+    } catch (err) {
+        next(err);
+    }
+});
 
 /**
- * starting the server
+ * throw error
  */
-const server = app.listen(3000,  () =>{
-  const host = server.address().address
-  const port = server.address().port
-  console.log("App listening at http://%s:%s", host, port)
+app.use((error, req, res, next) => {
+    res.status(500).json({message:error.message, stack:error.stack, path:req.path});
 });

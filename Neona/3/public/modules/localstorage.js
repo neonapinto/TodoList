@@ -5,9 +5,11 @@ export default class LocalStorage{
 
     #todoList;
     #todoListID;
+    #name;
     
-    constructor(){
-       
+    constructor(name){
+        this.#name = name;
+        this.#todoList = window.localStorage;
     }
 
     /**
@@ -18,8 +20,8 @@ export default class LocalStorage{
     addItem(input){
         return new Promise((resolve, reject) =>{
             this.#todoList.push({id: this.#todoListID++, value: input}); //update in data memory
-            window.localStorage.setItem("todoListID", JSON.stringify(this.#todoListID)); //push to local storage
-            window.localStorage.setItem("todoList", JSON.stringify(this.#todoList));
+            window.localStorage.setItem(`${this.#name}ID`, JSON.stringify(this.#todoListID)); //push to local storage
+            window.localStorage.setItem(this.#name, JSON.stringify(this.#todoList));
             resolve();
         })
     }
@@ -31,7 +33,7 @@ export default class LocalStorage{
     deleteItem(id){
         return new Promise((resolve, reject) =>{
             this.#todoList = this.#todoList.filter( element => {return element.id !== id}); //update in data memory
-            window.localStorage.setItem("todoList", JSON.stringify(this.#todoList)); //delete from local storage
+            window.localStorage.setItem(this.#name, JSON.stringify(this.#todoList)); //delete from local storage
             resolve();
         })
     }
@@ -43,7 +45,7 @@ export default class LocalStorage{
      */
     deleteItems(){
         return new Promise((resolve, reject) =>{
-            window.localStorage.removeItem('todoList'); //remove from local storage
+            window.localStorage.removeItem(this.#name); //remove from local storage
             resolve();
         })
     }
@@ -62,7 +64,7 @@ export default class LocalStorage{
                     element.value = input;
                 }
             });
-            window.localStorage.setItem("todoList", JSON.stringify(this.#todoList)); //push to local storage
+            window.localStorage.setItem(this.#name, JSON.stringify(this.#todoList)); //push to local storage
             resolve();
         })
     }
@@ -74,8 +76,8 @@ export default class LocalStorage{
     loadData(){
         return new Promise((resolve, reject) =>{
             //update in data memory
-            this.#todoList = JSON.parse(window.localStorage.getItem('todoList')) ?? [];
-            this.#todoListID = JSON.parse(window.localStorage.getItem('todoListID')) ?? 1;
+            this.#todoList = JSON.parse(window.localStorage.getItem(this.#name)) ?? [];
+            this.#todoListID = JSON.parse(window.localStorage.getItem(`${this.#name}ID`)) ?? 1;
             resolve(this.#todoList);
         });
     }

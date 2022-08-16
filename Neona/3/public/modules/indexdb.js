@@ -4,9 +4,10 @@
 export default class IndexStorage{
     #todoList;
     #db;
-    #dbname = 'todoList';
-    constructor(){
-       
+    #name;
+
+    constructor(name){
+       this.#name = name
     }
 
     /**
@@ -16,8 +17,8 @@ export default class IndexStorage{
      */
     addItem(input){
         return new Promise((resolve, reject) =>{
-            let tx = this.#db.transaction(this.#dbname, "readwrite"); //open a transaction in read write
-            let store = tx.objectStore(this.#dbname); //connect to object store
+            let tx = this.#db.transaction(this.#name, "readwrite"); //open a transaction in read write
+            let store = tx.objectStore(this.#name); //connect to object store
             let add  = store.add({value: input}); //add the new item into indexdb
             add.onsuccess = function(){ //return resolve
                 resolve();
@@ -34,8 +35,8 @@ export default class IndexStorage{
      */
     deleteItems(){
         return new Promise((resolve, reject) =>{
-            let tx = this.#db.transaction(this.#dbname, "readwrite"); //open a transaction in read write
-            let store = tx.objectStore(this.#dbname);  //connect to object store
+            let tx = this.#db.transaction(this.#name, "readwrite"); //open a transaction in read write
+            let store = tx.objectStore(this.#name);  //connect to object store
             let req = store.clear();  //clear all items indexdb
             req.onsuccess = function(){ //return resolve
                 resolve();
@@ -54,8 +55,8 @@ export default class IndexStorage{
     deleteItem(id){
         return new Promise((resolve,reject) =>{
             this.#todoList = this.#todoList.filter( element => {return element.id !== id}); //delete in data memory for todolist
-            let tx = this.#db.transaction(this.#dbname, "readwrite"); //open a transaction in read write
-            let store = tx.objectStore(this.#dbname); //connect to object store
+            let tx = this.#db.transaction(this.#name, "readwrite"); //open a transaction in read write
+            let store = tx.objectStore(this.#name); //connect to object store
             let req = store.delete(id); //delete the  item from indexdb
             req.onsuccess = () =>{ //return resolve
                 resolve();
@@ -80,8 +81,8 @@ export default class IndexStorage{
                 }
             });
     
-            let tx = this.#db.transaction(this.#dbname, "readwrite");//open a transaction in read write
-            let store = tx.objectStore(this.#dbname);//connect to object store
+            let tx = this.#db.transaction(this.#name, "readwrite");//open a transaction in read write
+            let store = tx.objectStore(this.#name);//connect to object store
             let req = store.put({value: input, id: index}); //put the updated item into indexdb
             req.onsuccess = () =>{//return resolve
                 resolve();
@@ -98,8 +99,8 @@ export default class IndexStorage{
      */
     loadData() {
         return new Promise ((resolve, reject) =>{
-            let tx = this.#db.transaction(this.#dbname, "readwrite"); //open a transaction in read write
-            let store = tx.objectStore(this.#dbname); //connect to object store
+            let tx = this.#db.transaction(this.#name, "readwrite"); //open a transaction in read write
+            let store = tx.objectStore(this.#name); //connect to object store
             let all_items = store.getAll(); //get all items from indexdb
             all_items.onsuccess = () => {  
                 this.#todoList = all_items.result; //on success update in memory
@@ -119,7 +120,7 @@ export default class IndexStorage{
         return new Promise((resolve, reject) =>{
             //check if browser supports indexdb
             const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-            let open = indexedDB.open(`${this.#dbname}DB`, 1);
+            let open = indexedDB.open(`${this.#name}DB`, 1);
             if (!('indexedDB' in window)) {
                 console.log('This browser doesn\'t support IndexedDB');
                 return;
@@ -128,8 +129,8 @@ export default class IndexStorage{
             //create a object store if it doesnt exist
             open.onupgradeneeded = () => {
                 this.#db = open.result;
-                if (!this.#db.objectStoreNames.contains(this.#dbname)) {
-                    let store = this.#db.createObjectStore(this.#dbname, {keyPath: "id", autoIncrement: true});
+                if (!this.#db.objectStoreNames.contains(this.#name)) {
+                    let store = this.#db.createObjectStore(this.#name, {keyPath: "id", autoIncrement: true});
                 }
             };
     
