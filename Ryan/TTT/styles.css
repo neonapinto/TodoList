@@ -1,0 +1,19 @@
+#board {
+    display: flex;
+    width: 90px;
+    height: 90px;
+    flex-wrap: wrap;
+}
+
+#board>div {
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    font-size: 10px;
+}
+
+#board>div::after {
+    content: attr(data-index);
+    color: #bbbbbb;
+}

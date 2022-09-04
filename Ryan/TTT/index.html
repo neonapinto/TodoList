@@ -1,160 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Title of the document</title>
-<style>
-    #board {
-        display:flex;width:90px;height:90px;background-color: #dadada;
-        flex-wrap:wrap;
-    }
-    #board > div {
-        border:1px solid black;
-        width:30px;
-        height:30px;
-        box-sizing:border-box;
-    }
-</style>
+    <title>Tic Tac Toe</title>
+    <script src="main.js" defer type="module"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div id="board">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div style="border-top-width: 0;border-left-width: 0;" data-index="0"></div>
+        <div style="border-top-width: 0;" data-index="1"></div>
+        <div style="border-top-width: 0;border-right-width: 0;" data-index="2"></div>
+        <div style="border-left-width: 0;" data-index="3"></div>
+        <div data-index="4"></div>
+        <div style="border-right-width: 0;" data-index="5"></div>
+        <div style="border-bottom-width: 0;border-left-width: 0;" data-index="6"></div>
+        <div style="border-bottom-width: 0;" data-index="7"></div>
+        <div style="border-bottom-width: 0;border-right-width: 0;" data-index="8"></div>
     </div>
     <div>
         <div id="X"></div>
         <div id="O"></div>
     </div>
-    <script>
-        (async () => {
-            class Player {
-                #score=0;
-                #name;
-                #type;
-                constructor(name, type) {
-                    this.#name=name;
-                    this.#type=type;
-                    document.getElementById(type).innerHTML = this.GetScoreText();
-                }
-                GetType() {
-                    return this.#type;
-                }
-                GetSpot() {
-                    let spot = prompt(`${this.#name}, which spot do you want? Choose 9 to exit.`);
-                    if (spot && spot.match(/^[0-9]$/)) {
-                        return parseInt(spot, 10);
-                    }
-                }
-                IncrementScore() {
-                    this.#score++;
-                    document.getElementById(this.#type).innerHTML = this.GetScoreText();
-                }
-                GetScoreText() {
-                    return this.#name + ": " + this.#score;
-                }
-                GetName() {
-                    return this.#name;
-                }
-            }
-            class Board {
-                #board;
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.#board = new Array(9).fill(null);
-                }
-                draw() {
-                    return new Promise((resolve, reject) => {
-                        for(let i=0; i<this.#board.length; i++) {
-                            document.querySelectorAll("#board > div")[i].innerHTML = this.#board[i] ? this.#board[i].GetType() : "";
-                        }
-                        window.requestAnimationFrame(() => {
-                            window.requestAnimationFrame(resolve);
-                        });
-                    });
-                }
-                placeTypeOnBoard(player,i) {
-                    if (!this.#board[i]) {
-                        this.#board[i]=player;
-                        return true;
-                    }
-                }
-                CheckLine(x, y, z) {
-                    if (this.#board[x] && this.#board[y] && this.#board[z] && this.#board[x].GetType() === this.#board[y].GetType() && this.#board[y].GetType() === this.#board[z].GetType()) {
-                        return this.#board[x];
-                    }
-                }
-                ifWon() {
-                    var lines = [
-                        this.CheckLine(0,1,2),
-                        this.CheckLine(3,4,5),
-                        this.CheckLine(6,7,8),
-                        this.CheckLine(0,3,6),
-                        this.CheckLine(1,4,7),
-                        this.CheckLine(2,5,8),
-                        this.CheckLine(0,4,8),
-                        this.CheckLine(6,4,2)
-                    ];
-                    return lines.find(x => x);
-                }
-            }
-            class Game {
-                #current_player;
-                #board;
-                #players;
-                constructor(players) {
-                    this.#current_player = 0;
-                    this.#players = players;
-                    this.#board = new Board();   
-                }
-                async GameLoop() {
-                    await this.#board.draw();
-                    while (true) {
-                        let spot = this.#players[this.#current_player].GetSpot();
-                        if (spot != null) {
-                            if (spot===9) {
-                                alert("Thanks for playing.");
-                                break;
-                            }
-                            let worked = this.#board.placeTypeOnBoard(this.#players[this.#current_player], spot);
-                            if (worked) {
-                                let user_won = this.#board.ifWon();
-                                if (user_won) {
-                                    user_won.IncrementScore();
-                                    this.#current_player = 0;
-                                    await this.#board.draw();
-                                    alert(`Congrats, ${user_won.GetName()} won!`);
-                                    this.#board.reset();
-                                } else {
-                                    this.#current_player = 1 - this.#current_player; 
-                                }
-                                await this.#board.draw();
-                            } else {
-                                alert("Spot is already filled! Pick another.");
-                            }
-                        } else {
-                            alert("Invalid spot! Try again.");
-                        }
-                    }
-                }
-            }
-
-            var sam = new Player("Sam", "X");
-            var jim = new Player("Jim", "O");
-
-            var game = new Game([sam, jim]);
-            game.GameLoop();
-        })();
-    </script>
-
 </body>
 
 </html>
