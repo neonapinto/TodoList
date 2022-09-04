@@ -11,26 +11,42 @@ import ServerStorage from  './modules/server.js' //server storage api strategy i
  */
 (async () =>{
    
-    let localdbObj = new LocalStorage();
-    let indexdbObj = new IndexStorage();
-    let serverindexObj = new ServerStorage();
-    let dbObj = localdbObj;
+    var localdbObj, indexdbObj, serverindexObj, dbObj;
+    var name = "todolist";
 
-    if(document.querySelector('input[name="storage"')){
-        document.querySelectorAll('input[name="storage"').forEach((elem) => {
-            elem.addEventListener('change', async (event) =>{
+    //singleton pattern for creating db objects
+    //if(document.querySelector('input[name="storage"')){
+        document.querySelectorAll('input[name="storage"').forEach((input) => {
+            input.addEventListener('input', async (event) =>{
                 if(event.target.value === 'local'){
+                    if(!localdbObj){
+                        localdbObj = new LocalStorage(name);
+                        await localdbObj.initialization();
+                    }
                     dbObj = localdbObj;
                 }else if(event.target.value === 'indexdb'){
+                    if(!indexdbObj){
+                        indexdbObj = new IndexStorage(name);
+                        await indexdbObj.initialization();
+                    }
                     dbObj = indexdbObj;
                 }else if(event.target.value === 'server'){
+                    if(!serverindexObj){
+                        serverindexObj = new ServerStorage(name);
+                        await serverindexObj.initialization();
+                    }
                     dbObj = serverindexObj;
                 }
-                await dbObj.initialization(); //init function to load the data
+
                 await loadUi(todo_container);//load the dom
             });
+            
+            // if checked, manually run the click event
+            if (input.checked) {
+                input.dispatchEvent(new Event('input', {bubbles:true}));
+            }
         });
-    }
+    //}
 
     const todo_container = document.getElementById("list-container"); //container which holds todolist
 
@@ -61,7 +77,6 @@ import ServerStorage from  './modules/server.js' //server storage api strategy i
     async function loadUi(todo_container){
         todo_container.replaceChildren(); //clear dom elements
         let todoList = await dbObj.loadData(); //load data from storage
-        console.log(todoList);
         todoList.forEach(AddItemToDOM); //add items with new data
     }
 
@@ -111,5 +126,5 @@ import ServerStorage from  './modules/server.js' //server storage api strategy i
         await loadUi(todo_container); //refresh dom
     }
 
-    await loadUi(todo_container); //refresh dom 
+    // await loadUi(todo_container); //refresh dom 
 })();

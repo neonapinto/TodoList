@@ -1,126 +1,69 @@
-/**
- * Server class for loading data from server 
- */
-export default class Server{
-    #todolist;
-    #todoListID;
+export default class ServerStorage {
+  #name;
 
-    /**
-     * initializing constructor for todoloist id counter
-     */
-    constructor(){
-      // this.#todoListID = 1;
-    }
+  constructor(name) {
+      this.#name = name;
+  }
 
-    /**
-     * function to add item to by post method
-     * @param {*} input consists of id and item
-     * @returns a promise on resolving successful addition
-     */
-    async addItem(input){
-        return new Promise(async(resolve, reject) =>{
-                const data = { "id": this.#todoListID++, "value": input }; //send just data
-                fetch('/add_item', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(data),
-                })
-                .then((response) => {
-                  resolve(response);
-                })
-                .catch((error) => {
-                  reject(error);
-                });
-          });   
-    }
+  /**
+   * initialize the api call
+   */
+  async initialization() {
+      await fetch("/init?name=" + encodeURIComponent(this.#name));
+  }
 
-    /**
-     * function to update the item by the patch method
-     * @param {*} index id of the item to be updated
-     * @param {*} input the value to be  updated
-     * @returns a promise on resolving a successful update
-     */
-    updateItem(index, input){
-      return new Promise((resolve, reject) =>{
-        fetch('/update_item', {
-          method: 'PATCH', //use put
-          body: JSON.stringify({
-            "id" : index,
-            "value": input
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
+  /**
+   * load data
+   * @returns todolist
+   */
+  async loadData() {
+      return await (await fetch("/item?name=" + encodeURIComponent(this.#name))).json();
+  }
+
+  
+  /**
+   * add function to add all items
+   */
+  async addItem(value) {
+      await fetch("/item?name=" + encodeURIComponent(this.#name), {
+          method:"POST",
+          body:JSON.stringify({value}),
+          headers:{
+              "content-type":"application/json"
           }
-        })
-          .then((response) => {
-            resolve();
-          })
       });
-    }
+  }
 
-    /**
-     * function to delete an id from the todolist
-     * @param {*} index id to be deleted
-     * @returns a promise to resolve successful deletion
-     */
-    deleteItem(index){
-      return new Promise(async(resolve, reject) =>{
-        fetch('/delete_item', { //url add id check
-          method: 'DELETE',
-          body: JSON.stringify({
-            "id" : index
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
+  
+  /**
+   * update function to update an item's value
+   */
+  async updateItem(id, value) {
+      await fetch("/item?id=" + id + "&name=" + encodeURIComponent(this.#name), {
+          method:"PUT",
+          body:JSON.stringify({value}),
+          headers:{
+              "content-type":"application/json"
           }
-        })
-        .then((response) => {
-          resolve();
-        })
-      }); 
-    }
-
-    /**
-     * function to delete the all items using patch method
-     * @returns the promise on successful updation
-     */
-    deleteItems(){
-      return new Promise(async(resolve, reject) =>{
-        fetch('/delete_all_items', {
-          method: 'PATCH' //delete
-        })
-        .then((response) => {
-          response.text()
-          resolve();
-        })
-      }); 
-    }
-
-    /**
-     * function to load data from server side using get method
-     * @returns loaded data from server side
-     */
-    loadData(){
-      return new Promise((resolve, reject) =>{
-        fetch('/get_list')
-        .then((response) => response.json())
-        .then((data) => {
-          this.#todolist = data.list;
-          this.#todoListID = data.listId; //remove
-          resolve(this.#todolist);
-        })
       });
-    }
+  }
 
-    /**
-     * init function to load the local storage
-     * @returns empty promise resolve
-     */
-    initialization() {
-    return new Promise((resolve, reject) => {
-        resolve();
-    });
-}
+  
+  /**
+   * delete function to delete an item
+   */
+  async deleteItem(id) {
+      await fetch("/item?id=" + id + "&name=" + encodeURIComponent(this.#name), {
+          method:"DELETE"
+      });
+  }
+
+  /**
+   * delete function to delete all items
+   */
+  async deleteItems() {
+      await fetch("/item?name=" + encodeURIComponent(this.#name), {
+          method:"DELETE"
+      });
+  }
 }
