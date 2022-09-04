@@ -1,3 +1,7 @@
+html {
+    font-family: Arial;
+}
+
 #board {
     display: flex;
     width: 90px;
@@ -5,15 +9,20 @@
     flex-wrap: wrap;
 }
 
-#board>div {
+#board > div {
     border: 1px solid black;
     width: 30px;
     height: 30px;
     box-sizing: border-box;
-    font-size: 10px;
+    position: relative;
+    padding:6.5px;
 }
 
-#board>div::after {
+#board > div::after {
     content: attr(data-index);
     color: #bbbbbb;
+    font-size: 10px;
+    position: absolute;
+    top:0;
+    left:0;
 }
