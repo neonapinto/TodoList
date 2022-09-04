@@ -9,7 +9,7 @@ export default class Board {
     draw() {
         return new Promise((resolve, reject) => {
             for(let i=0; i<this.#board.length; i++) {
-                document.querySelectorAll("#board > div")[i].innerHTML = this.#board[i] ? this.#board[i].GetType() : "";
+                document.querySelectorAll("#board > div")[i].innerHTML = this.#board[i]?.GetType() ?? "";
             }
             window.requestAnimationFrame(() => {
                 window.requestAnimationFrame(resolve);
