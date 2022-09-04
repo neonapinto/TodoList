@@ -5,7 +5,7 @@ export default class Player {
     constructor(name, type) {
         this.#name=name;
         this.#type=type;
-        this.SetScoreText();
+        this.#SetScoreText();
     }
     GetType() {
         return this.#type;
@@ -18,9 +18,9 @@ export default class Player {
     }
     IncrementScore() {
         this.#score++;
-        this.SetScoreText();
+        this.#SetScoreText();
     }
-    SetScoreText() {
+    #SetScoreText() {
         document.getElementById(this.#type).innerHTML = this.#name + ": " + this.#score;
     }
     GetName() {
