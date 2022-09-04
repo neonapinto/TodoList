@@ -1,13 +1,17 @@
 import Board from "./board.js";
+import Player from "./player.js";
 
 export default class Game {
     #current_player;
     #board;
     #players;
-    constructor(players) {
+    constructor() {
         this.#current_player = 0;
-        this.#players = players;
+        var p1 = new Player("Player 1", "X");
+        var p2 = new Player("Player 2", "O");
+        this.#players = [p1, p2];
         this.#board = new Board();   
+        this.GameLoop();
     }
     async GameLoop() {
         await this.#board.draw();
@@ -15,7 +19,7 @@ export default class Game {
         while (true) {
             let spot = this.#players[this.#current_player].GetSpot();
             if (spot != null) {
-                if (spot===9) {
+                if (spot === 9) {
                     alert("Thanks for playing.");
                     break;
                 }

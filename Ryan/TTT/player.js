@@ -21,7 +21,7 @@ export default class Player {
         this.#SetScoreText();
     }
     #SetScoreText() {
-        document.getElementById(this.#type).innerHTML = this.#name + ": " + this.#score;
+        document.getElementById(this.#type).innerHTML = this.#name + " (" + this.#type + "): " + this.#score;
     }
     GetName() {
         return this.#name;
