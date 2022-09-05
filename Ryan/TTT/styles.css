@@ -1,0 +1,29 @@
+html {
+    font-family: Arial;
+}
+
+#board {
+    display: flex;
+    width: 90px;
+    height: 90px;
+    flex-wrap: wrap;
+    margin-bottom:20px;
+}
+
+#board > div {
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    position: relative;
+    padding:6.5px;
+}
+
+#board > div::after {
+    content: attr(data-index);
+    color: #bbbbbb;
+    font-size: 10px;
+    position: absolute;
+    top:0;
+    left:0;
+}
