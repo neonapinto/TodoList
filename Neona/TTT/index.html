@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        .wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-auto-rows: minmax(10px, 60px);
+        }
+        .one {
+        grid-column: 1;
+        grid-row: 1;
+        }
+        .two {
+        grid-column: 2;
+        grid-row: 1;
+        }
+        .three {
+        grid-column: 3;
+        grid-row: 1;
+        }
+        .four {
+        grid-column: 1;
+        grid-row: 2;
+        }
+        .five {
+        grid-column: 2;
+        grid-row: 2;
+        }
+        .six {
+        grid-column: 3;
+        grid-row: 2;
+        }
+        .seven {
+        grid-column: 1;
+        grid-row: 3;
+        }
+        .eight {
+        grid-column: 2;
+        grid-row: 3;
+        }
+        .nine {
+        grid-column: 3;
+        grid-row: 3;
+        }
+        .wrapper > div{
+            width: 100%;
+            border: 1px solid black;
+            font-size: 40px;
+            font-size:24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <input id="move" type="text"/> 
+    <div id="turn"></div>
+    <button id="play-btn">Play</button>
+    <div class="wrapper">
+        <div class="one"></div>
+        <div class="two"></div>
+        <div class="three"></div>
+        <div class="four"></div>
+        <div class="five"></div>
+        <div class="six"></div>
+        <div class="seven"></div>
+        <div class="eight"></div>
+        <div class="nine"></div>
+    </div>
+    <div id="player_1"></div>
+    <div id="player_2"></div>
+</body>
+<script src="js/Player.js" defer type="module" ></script>
+<script src="js/GameGrid.js"defer type="module" ></script>
+<script src="js/Gameloop.js" defer type="module"></script>
+<script src="js/main.js" defer type="module"></script>
+</html>

@@ -1,0 +1,18 @@
+1. The Bank(compiler) using government information(src) gives pension money(dist/public) useful to Grandma(browser) .
+2. The bank manager(dev) works on the goverment information(src) using company she worked in(node modules).
+3. The bank puts all the pension money(dist/public) into one account(webpack) for grandma(browser) to use.
+4. The bank doesnt give other pension details information(dist/server) to grandma(browser).
+5. The bank staff(API) helps in the smooth functioning of the pension process(CRUD) for the grandma(browser).
+6. The bank doesnt put all the pension information(dist/server) from goverment information(src) into one folder and doesnt give it to her as its not required for grandma(browser).
+7. The bank ensures that all pension process(src) happens smooth by checking for any mistakes(check)
+8. The bank keeps checking if there any new pension (money + paper)information given by government(src) to update grandma(browser).
+9. The bank setups everything like putting all money in one account(webpack), cleaning the previous records(clean) and updating with new records, ensure no mistakes are made
+ using extra staff(--inspect). - build
+10. The money(dist/public) is alloted and is ready for grandma(browser) lifetime to be used - launching.
+11. Assign a new staff to help grandma confirm things on her pension and if any errors fixed right away.
+12. If there is any new incentive by the goverment or any issues by the bank then 9 and 10 again to help get grandma new advantages.
+
+-> kid and his bullies
+
+
+
