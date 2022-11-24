@@ -1,15 +1,10 @@
-import React from 'react';
 import './App.css';
-import Database from './components/DatabasePanel/DatabasePanel';
-import Header from './components/Header/Header';
-import Tasks from './components/Tasks/Tasks';
+import TodoController from './components/TodoController';
 
 function App() {
   return (
     <div className="App">
-        <Header/>
-        <Database/>
-        <Tasks/>
+      <TodoController/>
     </div>
   );
 }
